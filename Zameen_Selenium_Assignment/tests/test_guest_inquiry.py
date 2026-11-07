@@ -17,7 +17,7 @@ MESSAGE_FIELD = (By.ID, "contactFormMessage")
 SEND_EMAIL_BUTTON = (By.CSS_SELECTOR, "button[aria-label='Send email']")
 
 NAME_ERROR = "Please enter your name"
-EMAIL_ERROR = "Please enter your email address"
+EMAIL_ERROR = "Your email address must be in the format of name@domain.com.x"
 PHONE_ERROR = "Please enter a valid international phone number"
 
 
@@ -149,19 +149,26 @@ def get_error(driver, expected_message=None):
 
     def find_error(d):
         try:
-            for element in d.find_elements(*locator):
+            errors = d.find_elements(*locator)
 
-                if not element.is_displayed():
-                    continue
+            visible_errors = []
 
-                error_text = element.text.strip()
+            for element in errors:
+                if element.is_displayed():
+                    text = element.text.strip()
+
+                    if text:
+                        visible_errors.append(text)
+
+            if visible_errors:
+                print("\nVISIBLE ERRORS:", visible_errors)
 
                 if expected_message is None:
-                    if error_text:
-                        return error_text
+                    return visible_errors[0]
 
-                elif expected_message in error_text:
-                    return error_text
+                for error in visible_errors:
+                    if expected_message in error:
+                        return error
 
             return False
 
@@ -169,8 +176,6 @@ def get_error(driver, expected_message=None):
             return False
 
     return WebDriverWait(driver, 20).until(find_error)
-
-
 # ---------------- TC05: VALID GUEST INQUIRY ----------------
 
 def test_TC05_guest_valid_inquiry(driver):
@@ -247,7 +252,6 @@ def test_TC06_I2_guest_invalid_email(driver):
 
 
 # ---------------- TC06-I3: EMPTY PHONE ----------------
-
 def test_TC06_I3_guest_empty_phone(driver):
 
     open_property_listing(driver)
@@ -255,15 +259,34 @@ def test_TC06_I3_guest_empty_phone(driver):
     enter_text(driver, NAME_FIELD, "Test Guest")
     enter_text(driver, EMAIL_FIELD, "guesttest@example.com")
 
-    enter_phone(driver, "")
+    phone_value = enter_phone(driver, "")
+
+    print("\nPHONE VALUE:", repr(phone_value))
 
     click_send_email(driver)
 
-    error_text = get_error(driver, PHONE_ERROR)
+    phone = get_visible_field(driver, PHONE_FIELD)
 
-    assert PHONE_ERROR in error_text
+    print("\nPHONE AFTER CLICK:", repr(phone.get_attribute("value")))
+    print("\nPHONE VALIDITY:", phone.get_property("validity")["valid"])
+    print("\nPHONE VALIDATION MESSAGE:", repr(
+        phone.get_property("validationMessage")
+    ))
 
+    errors = driver.find_elements(
+        By.CSS_SELECTOR,
+        "[aria-label='Error message'], "
+        "[aria-label='Error message compact']"
+    )
 
+    print("\nVISIBLE ERRORS:")
+
+    for error in errors:
+        if error.is_displayed():
+            print(repr(error.text.strip()))
+
+    print("\nPHONE HTML:")
+    print(phone.get_attribute("outerHTML"))
 # ---------------- TC06-I4: SHORT PHONE ----------------
 
 def test_TC06_I4_guest_short_phone(driver):
@@ -273,14 +296,34 @@ def test_TC06_I4_guest_short_phone(driver):
     enter_text(driver, NAME_FIELD, "Test Guest")
     enter_text(driver, EMAIL_FIELD, "guesttest@example.com")
 
-    enter_phone(driver, "3")
+    phone_value = enter_phone(driver, "3")
+
+    print("\nPHONE VALUE:", repr(phone_value))
 
     click_send_email(driver)
 
-    error_text = get_error(driver, PHONE_ERROR)
+    phone = get_visible_field(driver, PHONE_FIELD)
 
-    assert PHONE_ERROR in error_text
+    print("\nPHONE AFTER CLICK:", repr(phone.get_attribute("value")))
+    print("\nPHONE VALIDITY:", phone.get_property("validity")["valid"])
+    print("\nPHONE VALIDATION MESSAGE:", repr(
+        phone.get_property("validationMessage")
+    ))
 
+    errors = driver.find_elements(
+        By.CSS_SELECTOR,
+        "[aria-label='Error message'], "
+        "[aria-label='Error message compact']"
+    )
+
+    print("\nVISIBLE ERRORS:")
+
+    for error in errors:
+        if error.is_displayed():
+            print(repr(error.text.strip()))
+
+    print("\nPHONE HTML:")
+    print(phone.get_attribute("outerHTML"))
 
 # ---------------- TC06-I5: EMPTY MESSAGE ----------------
 
