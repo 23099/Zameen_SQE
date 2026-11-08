@@ -1,0 +1,11 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\Programming\Semesters\Semester-7\SQE\Assignments\Assignment-2\Zameen_SQE\Zameen_Selenium_Assignment\tests
+plugins: repeat-0.9.4
+collecting ... collected 3 items / 1 deselected / 2 selected
+
+test_favourites.py::test_TC07_favourites_valid PASSED
+test_favourites.py::test_TC08A_logged_out_heart_asks_for_login PASSED
+
+================= 2 passed, 1 deselected in 149.32s (0:02:29) =================

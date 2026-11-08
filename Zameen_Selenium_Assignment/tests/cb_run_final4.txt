@@ -1,0 +1,73 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\Programming\Semesters\Semester-7\SQE\Assignments\Assignment-2\Zameen_SQE\Zameen_Selenium_Assignment\tests
+plugins: repeat-0.9.4
+collecting ... collected 3 items
+
+test_continue_browsing.py::test_TC09_continue_browsing_valid FAILED
+test_continue_browsing.py::test_TC10A_same_property_favourite_toggle PASSED
+test_continue_browsing.py::test_TC10B_invalid_price_range PASSED
+
+================================== FAILURES ===================================
+______________________ test_TC09_continue_browsing_valid ______________________
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connectionpool.py:540: in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connection.py:638: in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+C:\Python314\Lib\http\client.py:1459: in getresponse
+    response.begin()
+C:\Python314\Lib\http\client.py:336: in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+C:\Python314\Lib\http\client.py:297: in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Python314\Lib\socket.py:729: in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+E   TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+test_continue_browsing.py:1045: in test_TC09_continue_browsing_valid
+    open_favourites(driver)
+test_continue_browsing.py:755: in open_favourites
+    driver.get(FAVOURITES_URL)
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\selenium\webdriver\remote\webdriver.py:586: in get
+    self.execute(Command.GET, {"url": url})
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\selenium\webdriver\remote\webdriver.py:563: in execute
+    response = cast(RemoteConnection, self.command_executor).execute(driver_command, params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\selenium\webdriver\remote\remote_connection.py:435: in execute
+    return self._request(command_info[0], url, body=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\selenium\webdriver\remote\remote_connection.py:459: in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\_request_methods.py:143: in request
+    return self.request_encode_body(
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\_request_methods.py:278: in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\poolmanager.py:459: in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connectionpool.py:847: in urlopen
+    retries = retries.increment(
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\util\retry.py:510: in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\util\util.py:39: in reraise
+    raise value
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connectionpool.py:793: in urlopen
+    response = self._make_request(
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connectionpool.py:542: in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\urllib3\connectionpool.py:373: in _raise_timeout
+    raise ReadTimeoutError(
+E   urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='localhost', port=64409): Read timed out. (read timeout=300)
+=========================== short test summary info ===========================
+FAILED test_continue_browsing.py::test_TC09_continue_browsing_valid - urllib3...
+================== 1 failed, 2 passed in 1515.69s (0:25:15) ===================

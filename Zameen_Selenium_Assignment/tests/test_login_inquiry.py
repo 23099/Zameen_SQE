@@ -4,7 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    TimeoutException,
+)
 
 
 # =========================================
@@ -42,15 +45,59 @@ SEND_BUTTON = (
 # DRIVER FIXTURE
 # =========================================
 
+# Zameen pages embed a lot of ad/tracker scripts that can stall page
+# loads for minutes. Blocking them makes navigation fast and stable;
+# the site's own content and functionality are not affected.
+BLOCKED_URLS = [
+    "*doubleclick.net/*",
+    "*googlesyndication.com/*",
+    "*googleadservices.com/*",
+    "*googletagmanager.com/*",
+    "*google-analytics.com/*",
+    "*googletagservices.com/*",
+    "*criteo.com/*",
+    "*criteo.net/*",
+    "*adnxs.com/*",
+    "*taboola.com/*",
+    "*outbrain.com/*",
+    "*scorecardresearch.com/*",
+    "*quantserve.com/*",
+]
+
+PAGE_LOAD_TIMEOUT = 60
+
+
 @pytest.fixture
 def driver():
 
     browser = webdriver.Chrome()
+    # Ad-heavy Zameen pages can take longer than the 120s default for
+    # ChromeDriver to answer; give the HTTP client more room.
+    browser.command_executor.client_config.timeout = 300
+
+    try:
+        browser.execute_cdp_cmd("Network.enable", {})
+        browser.execute_cdp_cmd("Network.setBlockedURLs", {"urls": BLOCKED_URLS})
+    except Exception:
+        pass
+
+    browser.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
     browser.maximize_window()
 
     yield browser
 
     browser.quit()
+
+
+def goto(driver, url):
+    """driver.get() that never blocks forever on third-party requests."""
+    try:
+        driver.get(url)
+    except TimeoutException:
+        try:
+            driver.execute_script("window.stop();")
+        except Exception:
+            pass
 
 
 # =========================================
@@ -70,7 +117,7 @@ def wait_for(driver, locator, timeout=20):
 
 def open_login_form(driver):
 
-    driver.get("https://www.zameen.com/")
+    goto(driver, "https://www.zameen.com/")
 
     login_button = WebDriverWait(driver, 20).until(
         EC.element_to_be_clickable(
@@ -137,7 +184,8 @@ def get_login_error(driver):
 
 def open_property_listing(driver):
 
-    driver.get(
+    goto(
+        driver,
         "https://www.zameen.com/Homes/Lahore-1-1.html"
     )
 
@@ -176,7 +224,7 @@ def open_property_listing(driver):
     if not property_url:
         raise Exception("No actual property listing found!")
 
-    driver.get(property_url)
+    goto(driver, property_url)
 
     wait.until(
         EC.presence_of_element_located(NAME_FIELD)

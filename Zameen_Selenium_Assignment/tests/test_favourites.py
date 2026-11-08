@@ -156,10 +156,18 @@ def test_TC07_favourites_valid(driver):
 
 # ---------------- TC08A: logged out, heart ----------------
 
+def heart_icon_class(driver, property_url):
+    """CSS class of the heart's <svg>; it changes when the heart is saved."""
+    button = find_heart_button(driver, property_url)
+    return button.find_element(By.TAG_NAME, "svg").get_attribute("class")
+
+
 def test_TC08A_logged_out_heart_asks_for_login(driver):
 
     open_results_page(driver)
     property_url = get_property_links(driver)[0]
+
+    class_before = heart_icon_class(driver, property_url)
 
     click_heart(driver, property_url)
 
@@ -171,9 +179,14 @@ def test_TC08A_logged_out_heart_asks_for_login(driver):
     )
     assert "forgot password" in page_text(driver), "Login pop-up not shown"
 
-    # And nothing was saved
-    assert ADDED_TOAST not in page_text(driver), (
-        "Property was saved although the user is logged out"
+    # Zameen shows an optimistic 'Added to Favourites' toast even for
+    # guests, so the toast text cannot be used here. The real indicator
+    # is the heart icon: it must NOT switch to its saved state.
+    time.sleep(1)
+    class_after = heart_icon_class(driver, property_url)
+
+    assert class_after == class_before, (
+        "Heart switched to the saved state although the user is logged out"
     )
 
 

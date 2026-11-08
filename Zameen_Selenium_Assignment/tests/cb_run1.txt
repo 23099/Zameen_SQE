@@ -1,0 +1,132 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\Programming\Semesters\Semester-7\SQE\Assignments\Assignment-2\Zameen_SQE\Zameen_Selenium_Assignment\tests
+plugins: repeat-0.9.4
+collecting ... collected 3 items
+
+test_continue_browsing.py::test_TC09_continue_browsing_valid PASSED
+test_continue_browsing.py::test_TC10A_same_property_favourite_toggle PASSED
+test_continue_browsing.py::test_TC10B_invalid_price_range 
+[TC10B] URL before filter: https://www.zameen.com/Homes/Lahore-1-1.html
+[TC10B] URL after filter : https://www.zameen.com/Homes/Lahore-1-1.html?keywords=80000
+[TC10B] property links   : 25
+[TC10B] zero-results hit : False
+[TC10B] page text        : buy
+rent
+new projects
+agents
+more
+add property
+mr
+mr
+manal rana
+view profile
+favourite properties
+(5)
+saved searches
+(0)
+manage alerts
+account settings
+z-value
+new
+property blocks
+buy
+rent
+new projects
+agents
+area guides
+maps
+tools
+more
+blog
+news
+help & support
+privacy policy
+terms of use
+site settings
+pkr
+eng
+sq. ft.
+download the zameen app
+logout
+profolio
+manage all your listings in one place.
+post a listing
+purpose
+buy
+city
+lahore
+location
+property type
+homes
+area (sqft)
+0
+to
+any
+price (pkr)
+0
+to
+any
+beds
+all
+baths
+all
+keyword
+80000
+more options
+0 selected
+zameenlahore property
+4 properties for sale in lahore
+save search
+"80000"
+clear all filters
+all homes
+(28,849)
+houses
+(25,151)
+flats
+(3,277)
+lahore homes for rent
+close
+locations of homes for sale in lahore
+sort alphabetically
+dha defence(8,446)
+bahria town(2,557)
+raiwind road(1,637)
+askari(1,401)
+park view city(1,379)
+central park housing scheme(694)
+johar town(655)
+gulberg(590)
+bahria orchard(580)
+lda avenue(520)
+dha 11 rahbar(434)
+valencia housing society(418)
+paragon city(401)
+gt road(393)
+jubilee town(348)
+wapda town(315)
+main canal bank road(310)
+allama iqbal town(294)
+marghzar officers colony(286)
+cantt(268)
+bedian road
+[TC10B] screenshot saved : tc10b_after_filter.png
+FAILED
+
+================================== FAILURES ===================================
+_______________________ test_TC10B_invalid_price_range ________________________
+test_continue_browsing.py:1202: in test_TC10B_invalid_price_range
+    WebDriverWait(driver, 20, poll_frequency=0.5).until(
+C:\Users\HP\AppData\Roaming\Python\Python314\site-packages\selenium\webdriver\support\wait.py:121: in until
+    raise TimeoutException(message, screen, stacktrace)
+E   selenium.common.exceptions.TimeoutException: Message:
+
+During handling of the above exception, another exception occurred:
+test_continue_browsing.py:1206: in test_TC10B_invalid_price_range
+    raise AssertionError(
+E   AssertionError: Price range 90-80,000 did not show a '0 properties' message.
+=========================== short test summary info ===========================
+FAILED test_continue_browsing.py::test_TC10B_invalid_price_range - AssertionE...
+=================== 1 failed, 2 passed in 484.11s (0:08:04) ===================

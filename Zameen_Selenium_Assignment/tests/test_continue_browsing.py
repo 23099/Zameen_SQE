@@ -587,11 +587,23 @@ from selenium.common.exceptions import (
 
 from test_login_inquiry import (
     driver,
+    goto,
     open_login_form,
     login,
     TEST_EMAIL,
     TEST_PASSWORD,
 )
+
+
+def go_back(driver):
+    """driver.back() that never blocks forever on third-party requests."""
+    try:
+        driver.back()
+    except TimeoutException:
+        try:
+            driver.execute_script("window.stop();")
+        except Exception:
+            pass
 
 
 BASE_URL = "https://www.zameen.com/"
@@ -644,9 +656,13 @@ def login_user(driver):
     login(driver, TEST_EMAIL, TEST_PASSWORD)
 
     def logged_in(d):
-        return not any(
-            f.is_displayed() for f in d.find_elements(By.NAME, "email")
-        )
+        try:
+            fields = d.find_elements(By.NAME, "email")
+            return not any(f.is_displayed() for f in fields)
+        except StaleElementReferenceException:
+            # The modal is being removed/re-rendered after a successful
+            # submit; check again on the next poll instead of crashing.
+            return False
 
     try:
         WebDriverWait(driver, 20).until(logged_in)
@@ -660,7 +676,7 @@ def login_user(driver):
 
 
 def open_results_page(driver):
-    driver.get(LISTING_URL)
+    goto(driver, LISTING_URL)
     wait_for_page(driver)
     wait_for_results(driver)
     time.sleep(3)
@@ -748,7 +764,7 @@ def _wait_until_favourites_settle(driver, timeout=20, min_wait=5):
 
 
 def open_favourites(driver):
-    driver.get(FAVOURITES_URL)
+    goto(driver, FAVOURITES_URL)
 
     WebDriverWait(driver, 25).until(
         lambda d: "favorite-properties" in d.current_url.lower()
@@ -981,82 +997,50 @@ def cleanup_favourites(driver, urls):
 # =========================================================
 
 def set_price_filter(driver, minimum, maximum):
+    """Open the Price (PKR) popover and apply a min/max price range.
+
+    On the listings page the price box is a dropdown: the inputs do not
+    exist until the [aria-haspopup] button is clicked. There is no 'Find'
+    button - pressing Enter in the max input applies the filter.
+    """
 
     wait = WebDriverWait(driver, 20)
 
-    price_label = wait.until(
-        EC.visibility_of_element_located((
-            By.XPATH,
-            "//*[normalize-space()='PRICE (PKR)' "
-            "or normalize-space()='Price (PKR)']"
+    price_filter = wait.until(
+        EC.presence_of_element_located((
+            By.CSS_SELECTOR,
+            "#large-search-form div[aria-label='Price filter']"
         ))
     )
 
-    price_container = None
-    current = price_label
+    price_button = price_filter.find_element(
+        By.CSS_SELECTOR, "div[role='button'][aria-haspopup='true']"
+    )
+    driver.execute_script("arguments[0].click();", price_button)
 
-    for _ in range(8):
-        try:
-            current = current.find_element(By.XPATH, "..")
+    min_input = wait.until(
+        EC.visibility_of_element_located((By.ID, "activeNumericInput"))
+    )
+    max_input = wait.until(
+        EC.visibility_of_element_located((By.ID, "inactiveNumericInput"))
+    )
 
-            visible_inputs = [
-                f for f in current.find_elements(By.TAG_NAME, "input")
-                if f.is_displayed() and f.is_enabled()
-            ]
-
-            if len(visible_inputs) >= 2:
-                price_container = current
-                break
-
-        except StaleElementReferenceException:
-            continue
-
-    if price_container is None:
-        raise AssertionError(
-            "Could not locate both inputs inside PRICE (PKR) section."
-        )
-
-    price_inputs = [
-        f for f in price_container.find_elements(By.TAG_NAME, "input")
-        if f.is_displayed() and f.is_enabled()
-    ][:2]
-
-    for field, value in zip(price_inputs, [minimum, maximum]):
+    for field, value in ((min_input, minimum), (max_input, maximum)):
         field.click()
         field.send_keys(Keys.CONTROL, "a")
         field.send_keys(Keys.BACKSPACE)
         field.send_keys(str(value))
-        field.send_keys(Keys.TAB)
         time.sleep(0.5)
 
-    # Press the Find button that belongs to THIS search bar
-    find_xpath = (
-        ".//*[self::button or self::a]"
-        "[translate(normalize-space(.),'FIND','find')='find']"
-    )
+    max_input.send_keys(Keys.ENTER)
 
-    submitted = False
-    scope = price_container
-
-    for _ in range(6):
-        try:
-            buttons = [
-                b for b in scope.find_elements(By.XPATH, find_xpath)
-                if b.is_displayed()
-            ]
-
-            if buttons:
-                driver.execute_script("arguments[0].click();", buttons[0])
-                submitted = True
-                break
-
-            scope = scope.find_element(By.XPATH, "..")
-
-        except (StaleElementReferenceException, NoSuchElementException):
-            break
-
-    if not submitted:
-        price_inputs[1].send_keys(Keys.ENTER)
+    try:
+        WebDriverWait(driver, 20).until(
+            lambda d: "price_min=" in d.current_url.lower()
+            and "price_max=" in d.current_url.lower()
+        )
+    except TimeoutException:
+        pass
 
     time.sleep(3)
     wait_for_page(driver)
@@ -1090,11 +1074,11 @@ def test_TC09_continue_browsing_valid(driver):
         confirm_toast(driver, ADDED_TOAST)
 
         # 2. Open C, then browser Back
-        driver.get(property_c)
+        goto(driver, property_c)
         wait_for_page(driver)
         time.sleep(2)
 
-        driver.back()
+        go_back(driver)
         wait_for_page(driver)
         wait_for_results(driver)
         time.sleep(3)

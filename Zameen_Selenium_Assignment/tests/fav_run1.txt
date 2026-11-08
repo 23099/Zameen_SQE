@@ -1,0 +1,28 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.6, pytest-9.0.2, pluggy-1.6.0 -- C:\Python314\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\HP\Desktop\Programming\Semesters\Semester-7\SQE\Assignments\Assignment-2\Zameen_SQE\Zameen_Selenium_Assignment\tests
+plugins: repeat-0.9.4
+collecting ... collected 3 items / 1 deselected / 2 selected
+
+test_favourites.py::test_TC07_favourites_valid PASSED
+test_favourites.py::test_TC08A_logged_out_heart_asks_for_login FAILED
+
+================================== FAILURES ===================================
+_________________ test_TC08A_logged_out_heart_asks_for_login __________________
+test_favourites.py:175: in test_TC08A_logged_out_heart_asks_for_login
+    assert ADDED_TOAST not in page_text(driver), (
+E   AssertionError: Property was saved although the user is logged out
+E   assert 'added to favourites' not in 'buy\nrent\n...n ?\nsign up'
+E     
+E     'added to favourites' is contained here:
+E       buy
+E       rent
+E       new projects
+E       agents
+E       more...
+E     
+E     ...Full output truncated (722 lines hidden), use '-vv' to show
+=========================== short test summary info ===========================
+FAILED test_favourites.py::test_TC08A_logged_out_heart_asks_for_login - Asser...
+============ 1 failed, 1 passed, 1 deselected in 116.51s (0:01:56) ============
