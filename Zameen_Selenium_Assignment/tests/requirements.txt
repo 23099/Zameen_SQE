@@ -1,0 +1,15 @@
+# in order to run the test case 7 and 8 , first run these commnads to make sure 
+# we have setup and all requirements full filled 
+cd path\to\her\test\folder
+dir
+
+pip install pytest pytest-repeat
+
+$env:RESULTS_FILE="results_groupmate.csv"
+pytest -k TC07 --count=29 -v
+
+Get-Content results_groupmate.csv -Head 5
+
+# conftest.py logs the test case results whether passed or failed 
+# for corrected test case no 9 & 10 , use this commands :
+pytest test_continue_browsing.py -v -s --tb=short 2>&1 | Tee-Object cb_out.txt
