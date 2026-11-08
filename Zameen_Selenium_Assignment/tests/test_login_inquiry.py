@@ -11,8 +11,8 @@ from selenium.common.exceptions import StaleElementReferenceException
 # TEST DATA
 # =========================================
 
-TEST_EMAIL = "manaalranaa123@gmail.com"
-TEST_PASSWORD = "Zameennn2#"
+TEST_EMAIL = ""
+TEST_PASSWORD = ""
 
 WRONG_PASSWORD = "WrongPassword123"
 INVALID_EMAIL = "nobody123@example.com"

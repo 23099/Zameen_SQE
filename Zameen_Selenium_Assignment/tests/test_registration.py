@@ -16,10 +16,10 @@ from selenium.webdriver.support import expected_conditions as EC
 TEST_NAME = "Test User"
 
 # Use a NEW email that has never been registered
-TEST_EMAIL = "yokapap425@digeros.com"
+TEST_EMAIL = ""
 
 # Already registered email
-REGISTERED_EMAIL = "lelofih238@drtall.com"
+REGISTERED_EMAIL = ""
 
 TEST_PASSWORD = "Test@12345"
 TEST_PHONE = "+923001234567"
