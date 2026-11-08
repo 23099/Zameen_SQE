@@ -1,0 +1,6 @@
+﻿Use Case,Test Cases,Total Runs,Passed,Failed,Success Rate,95% Lower Bound,Decision
+User Registration,"TC01, TC02",58,58,0,100%,94.97%,Accept
+Order Placement 1 – Logged-in User,"TC03, TC04",58,58,0,100%,94.97%,Accept
+Order Placement 2 – Guest User,"TC05, TC06",58,58,0,100%,94.97%,Accept
+Shopping Cart – Adapted to Favorite Properties,"TC07, TC08",58,58,0,100%,94.97%,Accept
+Continue Shopping – Adapted to Continue Browsing,"TC09, TC10",58,58,0,100%,94.97%,Accept

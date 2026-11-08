@@ -1,0 +1,11 @@
+﻿Test Case ID,Test Case,Use Case,Total Runs,Passed,Failed,Success Rate,95% Lower Bound,Decision
+TC01,Registration – Valid Input,User Registration,29,29,0,100%,90.19%,Accept
+TC02,Registration – Invalid Input,User Registration,29,29,0,100%,90.19%,Accept
+TC03,Logged-in Inquiry – Valid Input,Order Placement 1 – Logged-in User,29,29,0,100%,90.19%,Accept
+TC04,Logged-in Inquiry – Invalid Input,Order Placement 1 – Logged-in User,29,29,0,100%,90.19%,Accept
+TC05,Guest Inquiry – Valid Input,Order Placement 2 – Guest User,29,29,0,100%,90.19%,Accept
+TC06,Guest Inquiry – Invalid Input,Order Placement 2 – Guest User,29,29,0,100%,90.19%,Accept
+TC07,Favorites – Valid Input,Shopping Cart – Adapted to Favorite Properties,29,29,0,100%,90.19%,Accept
+TC08,Favorites – Invalid or Abnormal Conditions,Shopping Cart – Adapted to Favorite Properties,29,29,0,100%,90.19%,Accept
+TC09,Continue Browsing – Valid Input,Continue Shopping – Adapted to Continue Browsing,29,29,0,100%,90.19%,Accept
+TC10,Continue Browsing – Invalid or Abnormal Conditions,Continue Shopping – Adapted to Continue Browsing,29,29,0,100%,90.19%,Accept
